@@ -1,5 +1,6 @@
 package unit;
 
+import app.foot.exception.NotFoundException;
 import app.foot.model.Player;
 import app.foot.model.PlayerScorer;
 import app.foot.repository.MatchRepository;
@@ -10,6 +11,7 @@ import app.foot.repository.entity.PlayerEntity;
 import app.foot.repository.entity.PlayerScoreEntity;
 import app.foot.repository.mapper.PlayerMapper;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.crossstore.ChangeSetPersister;
 
 import java.time.Instant;
 import java.util.List;
@@ -99,5 +101,32 @@ public class PlayerMapperTest {
                 .ownGoal(false)
                 .match(matchEntity1)
                 .build(), actual);
+    }
+    @Test
+    void read_playerEntity_ok(){
+        when(teamRepositoryMock.findByName(entityRakoto().getTeam().getName()))
+                .thenReturn(teamBarea());
+        PlayerEntity actual = subject.toEntity(Player.builder()
+                .id(1)
+                .name("Rakoto")
+                .isGuardian(false)
+                .teamName("Barea")
+                .build());
+        assertEquals(entityRakoto(),actual);
+        System.out.println(actual);
+    }
+    @Test
+    void player_to_entity_ko() {
+        Player player = Player
+                .builder()
+                .id(1)
+                .name("Rakoto")
+                .isGuardian(false)
+                .teamName("fosa")
+                .build();
+
+        when(teamRepositoryMock.findByName("fosa")).thenThrow(new NotFoundException(player.getTeamName()+" not found"));
+
+        assertThrowsExceptionMessage("404 NOT_FOUND : Vohizy not found", NotFoundException.class, () -> subject.toEntity(player));
     }
 }
