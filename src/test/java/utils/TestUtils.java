@@ -21,6 +21,14 @@ public class TestUtils {
                 .build();
     }
 
+    public static PlayerScorer scorer4() {
+        return PlayerScorer.builder()
+                .player(player4())
+                .isOG(false)
+                .scoreTime(60)
+                .build();
+    }
+
     public static PlayerScorer nullScoreTimeScorer() {
         return scorer1().toBuilder()
                 .scoreTime(null)
@@ -32,6 +40,14 @@ public class TestUtils {
                 .id(1)
                 .name("Rakoto")
                 .isGuardian(false)
+                .build();
+    }
+    public static Player player4() {
+        return Player.builder()
+                .id(4)
+                .name("Rabe")
+                .isGuardian(false)
+                .teamName("E3")
                 .build();
     }
 
