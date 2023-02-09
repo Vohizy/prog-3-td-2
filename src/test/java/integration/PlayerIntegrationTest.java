@@ -18,8 +18,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static utils.TestUtils.assertThrowsException;
 
 @SpringBootTest(classes = FootApi.class)
 @AutoConfigureMockMvc
@@ -86,6 +88,30 @@ class PlayerIntegrationTest {
 
         assertEquals(1, actual.size());
         assertEquals(toCreate, actual.get(0).toBuilder().id(null).build());
+    }
+
+    @Test
+    void players_name_mandatory_ko() throws Exception {
+        Player toRest = Player.builder()
+                .id(6)
+                .name("")
+                .isGuardian(false)
+                .build();
+
+        String errorMessage = "400 BAD_REQUEST : Name is mandatory";
+
+        assertThrowsException(errorMessage,
+                mockMvc.perform(put("/players")
+                                .content(objectMapper.writeValueAsString(toRest))
+                                .contentType("application/json")
+                                .accept("application/json"))
+                        .andExpect(status().isBadRequest()).andReturn().getResponse());
+        assertThrowsException(errorMessage,
+                mockMvc.perform(put("/players")
+                                .content(objectMapper.writeValueAsString(toRest.toBuilder().name(null).build()))
+                                .contentType("application/json")
+                                .accept("application/json"))
+                        .andExpect(status().isBadRequest()).andReturn().getResponse());
     }
 
     private List<Player> convertFromHttpResponse(MockHttpServletResponse response)
