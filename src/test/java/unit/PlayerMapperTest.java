@@ -127,6 +127,6 @@ public class PlayerMapperTest {
 
         when(teamRepositoryMock.findByName("fosa")).thenThrow(new NotFoundException(player.getTeamName()+" not found"));
 
-        assertThrowsExceptionMessage("404 NOT_FOUND : Vohizy not found", NotFoundException.class, () -> subject.toEntity(player));
+        assertThrowsExceptionMessage("404 NOT_FOUND : fosa not found", NotFoundException.class, () -> subject.toEntity(player));
     }
 }
