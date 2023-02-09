@@ -2,16 +2,21 @@ package utils;
 
 import app.foot.controller.rest.Player;
 import app.foot.controller.rest.PlayerScorer;
+import app.foot.exception.ApiException;
 import app.foot.model.Team;
 import app.foot.repository.entity.PlayerEntity;
 import app.foot.repository.entity.PlayerScoreEntity;
 import app.foot.repository.entity.TeamEntity;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.function.Executable;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestUtils {
+    private static final ObjectMapper objectMapper = new ObjectMapper()
+            .findAndRegisterModules();
 
     public static PlayerScorer scorer1() {
         return PlayerScorer.builder()
@@ -117,4 +122,17 @@ public class TestUtils {
         Throwable exception = assertThrows(exceptionClass, executable);
         assertEquals(message, exception.getMessage());
     }
+    public static void assertThrowsException(String expectedBody,  MockHttpServletResponse executable) throws Exception{
+        MockHttpServletResponse response = executable;
+        Exception exception = objectMapper.readValue(
+                response.getContentAsString(), Exception.class);
+        try{
+            if (response.getStatus()!=200 && response.getStatus()!=201){
+                throw new ApiException(response.getStatus(),exception.getMessage());
+            };
+        }catch(ApiException e){
+            assertEquals(expectedBody, exception.getMessage());
+        }
+    }
+}
 }

@@ -24,6 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static utils.TestUtils.*;
+import static utils.TestUtils.scorer6;
 
 @SpringBootTest(classes = FootApi.class)
 @AutoConfigureMockMvc
@@ -86,6 +87,18 @@ class MatchIntegrationTest {
                 .datetime(Instant.parse("2023-01-01T18:00:00Z"))
 
                 .build()));
+
+    }
+    void add_goals_scoretime_ko() throws Exception {
+        String Message = "400 BAD_REQUEST : Player#"+player6().getId()+" is a guardian so they cannot score.";
+        assertThrowsException(Message,
+                mockMvc.perform(post("/matches/3/goals")
+                                .content(objectMapper.writeValueAsString(List.of(playerScorer1().toBuilder()
+                                        .scoreTime(-1)
+                                        .build() )))
+                                .contentType("application/json").accept("application/json"))
+                        .andReturn()
+                        .getResponse());
 
     }
 
