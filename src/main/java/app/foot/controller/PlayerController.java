@@ -37,7 +37,7 @@ public class PlayerController {
     // Don't forget to add integration tests for this
 
     @PutMapping("/players")
-    public List<Player> modifyPlayers(@RequestBody List<PlayerRest> toRest) {
-        return
+    public Player modifyPlayers(@RequestBody Player toRest) {
+        return mapper.toRest(service.UpdatePlayers(mapper.toDomain(toRest)));
     }
 }
