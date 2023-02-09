@@ -28,4 +28,7 @@ public class PlayerService {
                 .map(mapper::toDomain)
                 .collect(Collectors.toUnmodifiableList());
     }
+    public Player UpdatePlayers(app.foot.model.Player player){
+        return mapper.toDomain(repository.save(mapper.toUpdate(player)));
+    }
 }

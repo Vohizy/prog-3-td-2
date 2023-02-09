@@ -52,4 +52,11 @@ public class PlayerMapper {
                 .guardian(domain.getIsGuardian())
                 .build();
     }
+    public PlayerEntity toUpdate(Player domain) {
+        PlayerEntity entity = playerRepository.findById(domain.getId()).orElse(new PlayerEntity());
+        entity.setName(domain.getName());
+        entity.setGuardian(domain.getIsGuardian());
+        entity.setTeam(teamRepository.findByName(domain.getTeamName()));
+        return entity;
+    }
 }

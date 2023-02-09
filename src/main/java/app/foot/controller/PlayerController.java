@@ -1,6 +1,7 @@
 package app.foot.controller;
 
 import app.foot.controller.rest.Player;
+import app.foot.controller.rest.PlayerRest;
 import app.foot.controller.rest.mapper.PlayerRestMapper;
 import app.foot.service.PlayerService;
 import lombok.AllArgsConstructor;
@@ -35,5 +36,8 @@ public class PlayerController {
     //TODO: add PUT /players where you can modify the name and the guardian status of a player
     // Don't forget to add integration tests for this
 
-
+    @PutMapping("/players")
+    public List<Player> modifyPlayers(@RequestBody List<PlayerRest> toRest) {
+        return
+    }
 }
