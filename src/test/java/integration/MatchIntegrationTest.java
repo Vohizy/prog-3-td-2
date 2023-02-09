@@ -59,7 +59,30 @@ class MatchIntegrationTest {
         assertTrue(actual.contains(expectedMatch2()));
         //TODO: add these checks and its values
         //assertTrue(actual.contains(expectedMatch1()));
-        //assertTrue(actual.contains(expectedMatch3()));
+        assertTrue(actual.contains(expectedMatch3()));
+    }
+
+    private Match expectedMatch1() {
+       return Match.builder()
+                .id(1)
+                .teamA(teamMatchA().toBuilder()
+                        .team(team1())
+                        .score(4)
+                        .scorers(List.of(
+                                playerScorerA1(),
+                                playerScorerA2(),
+                                playerScorer1(),
+                                playerScorerA4()
+                        ))
+                        .build())
+                .teamB(teamMatchB().toBuilder()
+                        .team(team2())
+                        .score(2)
+                        .scorers(List.of())
+                        .build())
+                .stadium("S1")
+                .datetime(Instant.parse("2023-01-01 10:00:00"))
+                .build();
     }
 
     @Test
@@ -215,7 +238,50 @@ class MatchIntegrationTest {
                 .isOG(false)
                 .build();
     }
+    private static PlayerScorer playerScorerA1(){
+        return PlayerScorer.builder()
+                .player(player1())
+                .scoreTime(10)
+                .isOG(false)
+                .build();
+    }
+    private static PlayerScorer playerScorerA2(){
+        return PlayerScorer.builder()
+                .player(player1())
+                .scoreTime(20)
+                .isOG(false)
+                .build();
+    }
+    private static PlayerScorer playerScorerA4(){
+        return PlayerScorer.builder()
+                .player(player2())
+                .scoreTime(40)
+                .isOG(true)
+                .build();
+    }
+    private static PlayerScorer playerScorerB1(){
+        return PlayerScorer.builder()
+                .player(player2())
+                .scoreTime(50)
+                .isOG(false)
+                .build();
+    }
+    private static PlayerScorer playerScorerB2(){
+        return PlayerScorer.builder()
+                .player(player1())
+                .scoreTime(60)
+                .isOG(true)
+                .build();
+    }
 
+    private static Player player2() {
+        return Player.builder()
+                .id(2)
+                .name("J2")
+                .teamName("E2")
+                .isGuardian(false)
+                .build();
+    }
 
     private List<Match> convertFromHttpResponse(MockHttpServletResponse response)
             throws JsonProcessingException, UnsupportedEncodingException {
