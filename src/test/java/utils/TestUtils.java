@@ -43,7 +43,8 @@ public class TestUtils {
     public static Player player1() {
         return Player.builder()
                 .id(1)
-                .name("Rakoto")
+                .name("J1")
+                .teamName("E1")
                 .isGuardian(false)
                 .build();
     }

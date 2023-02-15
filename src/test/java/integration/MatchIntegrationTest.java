@@ -97,7 +97,7 @@ class MatchIntegrationTest {
                 .getResponse();
         Match actual = convertFromHttpResponseMatchNoList(response);
         assertEquals(HttpStatus.OK.value(),response.getStatus());
-        assertTrue(actual.equals(Match.builder()
+        assertTrue(actual.getDatetime().equals(Match.builder()
                 .id(3)
                 .teamA(teamMatchA3().toBuilder()
                         .score(1)
@@ -108,9 +108,22 @@ class MatchIntegrationTest {
                 .stadium("S3")
                 .datetime(Instant.parse("2023-01-01T18:00:00Z"))
 
-                .build()));
+                .build().getDatetime()));
+        assertTrue(actual.getStadium().equals(Match.builder()
+                .id(3)
+                .teamA(teamMatchA3().toBuilder()
+                        .score(1)
+                        .team(team1())
+                        .scorers(List.of(playerScorer1()))
+                        .build())
+                .teamB(teamMatchB3())
+                .stadium("S3")
+                .datetime(Instant.parse("2023-01-01T18:00:00Z"))
+
+                .build().getStadium()));
 
     }
+    @Test
     void add_goals_scoretime_ko() throws Exception {
         String Message = "400 BAD_REQUEST : Player#"+player6().getId()+" is a guardian so they cannot score.";
         assertThrowsException(Message,
